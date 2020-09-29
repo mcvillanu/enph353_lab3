@@ -39,7 +39,7 @@ def returnPosition(thresh):
                 lookFirst = True
                 lookSecond = False
 
-    if xCount > 50:
+    if xCount > 30:
         global lastPosition
         lastPosition = (int)(xSum/xCount)
         return lastPosition
@@ -55,49 +55,20 @@ def imageCallback(data):
 
         rgb_image = bridge.imgmsg_to_cv2(data)
         gray_frame = cv2.cvtColor(rgb_image, cv2.COLOR_BGR2GRAY)
-        ret, thresh = cv2.threshold(gray_frame,70,255, cv2.THRESH_BINARY)
+        ret, thresh = cv2.threshold(gray_frame,90,255, cv2.THRESH_BINARY)
 
         opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 
-        print(returnPosition(opening))
-
         s_error = 400 - returnPosition(opening)
-        lastError = 400 - lastPosition
-        d_error = lastError - s_error
 
-        if abs(s_error) >= 300:
-            print("state2222222222222222222222222222222222222")
-            kp = 0.002
-            kd = 0.02
-            state2 = True
-        elif abs(s_error) >= 100:
-            print("state1111111111111111")
-            kp = 0.0022
-            kd = 0.008
-            state2 = False
+        print(s_error)
+
+        if(abs(s_error) > 70):
+            move.linear.x = 0
+            move.angular.z = 0.4 * s_error/abs(s_error)
         else:
-            print("state0")
-            kp = 0.0032
-            kd = 0.008
-            state2 = False
-
-        error = kp*s_error - kd*d_error
-
-        speed = 0.15
-
-        if state2:
-            cap = 0.8
-        else:
-            cap = 0.4
-
-        if error > cap:
-            error = cap
-        if error < -cap:
-            error = -cap
-        print(error)
-
-        move.linear.x = speed
-        move.angular.z = error
+            move.linear.x = 0.15
+            move.angular.z = 0
 
         pub.publish(move)
     except CvBridgeError, e:
