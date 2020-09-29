@@ -152,6 +152,13 @@
     <origin xyz="${chassis_length/2} 0 ${chassis_height/2+camera_height/2}"/>
   </joint>
 
+  <gazebo reference="chassis">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <gazebo reference="camera_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
 
   <gazebo reference="camera_link">
     <sensor type="camera" name="camera1">
@@ -179,7 +186,7 @@
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>/camera1</cameraName>
+        <cameraName>rrbot/camera1</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>camera_link</frameName>
@@ -191,31 +198,6 @@
         <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
-  </gazebo>
-
-  <gazebo>
-    <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
-      <updateRate>100.0</updateRate>
-      <robotNamespace>/</robotNamespace>
-      <leftFrontJoint>wheel_FL_joint</leftFrontJoint>
-      <rightFrontJoint>wheel_FR_joint</rightFrontJoint>
-      <leftRearJoint>wheel_RL_joint</leftRearJoint>
-      <rightRearJoint>wheel_RR_joint</rightRearJoint>
-      <wheelSeparation>0.4</wheelSeparation>
-      <wheelDiameter>0.215</wheelDiameter>
-      <robotBaseFrame>chassis</robotBaseFrame>
-      <torque>20</torque>
-      <topicName>cmd_vel</topicName>
-      <broadcastTF>false</broadcastTF>
-    </plugin>
-  </gazebo>
-
-  <gazebo reference="chassis">
-    <material>Gazebo/Orange</material>
-  </gazebo>
-
-  <gazebo reference="camera_link">
-    <material>Gazebo/Blue</material>
   </gazebo>
 
   <gazebo reference="wheel_FL">
